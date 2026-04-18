@@ -102,7 +102,7 @@ export const Startpage = () => {
           <p className="text-sm text-gray-300 mb-2">To:</p>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/USDT_Logo.png/2048px-USDT_Logo.png" alt="rabbit" className="w-8 h-8 rounded-full" />
+              <img src="https://static.cx.metamask.io/api/v1/tokenIcons/1/0xdac17f958d2ee523a2206206994597c13d831ec7.png" alt="rabbit" className="w-8 h-8 rounded-full" />
               <span className="font-semibold">USDT</span>
             </div>
             <div className="text-right">
