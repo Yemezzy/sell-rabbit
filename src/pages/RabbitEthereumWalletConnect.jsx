@@ -351,7 +351,7 @@ const handleSell = async () => {
                 className="flex w-full text-white items-center justify-between rounded-xl bg-[#3A1C48] p-4 text-left transition hover:bg-[#4A205D]"
               >
                 <span className="flex items-center gap-3">
-                  <img src={wallet.icon} className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1D0729] text-xl"/>
+                  <img src={wallet.icon} className="flex bg-white p-1 h-10 w-10 items-center justify-center rounded-full bg-[#1D0729] text-xl"/>
                     
                   <span>
                     <span className="block font-semibold">{wallet.name}</span>
