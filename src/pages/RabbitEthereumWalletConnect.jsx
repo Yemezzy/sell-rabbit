@@ -325,7 +325,7 @@ const handleSell = async () => {
         >
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold">Connect Wallet</h2>
+              <h2 className="text-xl font-bold text-white">Connect Wallet</h2>
               <p className="mt-1 text-xs text-gray-400">
                 Choose an Ethereum wallet
               </p>
@@ -340,25 +340,21 @@ const handleSell = async () => {
 
           <div className="space-y-3">
             {[
-              { id: "metamask", name: "MetaMask", icon: "🦊" },
-              { id: "trust", name: "Trust Wallet", icon: "🛡️" },
-              { id: "phantom", name: "Phantom", icon: "👻" },
-              { id: "coinbase", name: "Coinbase Wallet", icon: "🔵" },
+              { id: "metamask", name: "MetaMask", icon: "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/MetaMask_Fox.svg/1280px-MetaMask_Fox.svg.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail" },
+              { id: "trust", name: "Trust Wallet", icon: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/trust-wallet-icon.png" },
+              { id: "phantom", name: "Phantom", icon: "https://pnglogo.sgp1.digitaloceanspaces.com/token-branded/phantom.png" },
+              { id: "coinbase", name: "Coinbase Wallet", icon: "https://www.svgrepo.com/show/331345/coinbase-v2.svg" },
             ].map((wallet) => (
               <button
                 key={wallet.id}
                 onClick={() => handleWalletSelect(wallet.id)}
-                className="flex w-full items-center justify-between rounded-xl bg-[#3A1C48] p-4 text-left transition hover:bg-[#4A205D]"
+                className="flex w-full text-white items-center justify-between rounded-xl bg-[#3A1C48] p-4 text-left transition hover:bg-[#4A205D]"
               >
                 <span className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1D0729] text-xl">
-                    {wallet.icon}
-                  </span>
+                  <img src={wallet.icon} className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1D0729] text-xl"/>
+                    
                   <span>
                     <span className="block font-semibold">{wallet.name}</span>
-                    <span className="block text-xs text-gray-400">
-                      Open / connect on Ethereum
-                    </span>
                   </span>
                 </span>
                 <span className="text-gray-400">›</span>
@@ -367,8 +363,7 @@ const handleSell = async () => {
           </div>
 
           <p className="mt-4 text-center text-xs text-gray-500">
-            On mobile, selecting a wallet opens this website in that wallet's
-            browser when a direct wallet connection is not available.
+           Please select a wallet that holds Rabbit Coin.
           </p>
         </div>
       </div>
