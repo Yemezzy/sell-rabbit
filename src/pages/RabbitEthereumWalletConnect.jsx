@@ -491,8 +491,7 @@ const handleSell = async () => {
                       className="bg-transparent text-right w-32 outline-none text-lg font-bold"
                     />
                              <p className="text-xs text-gray-400">
-                ~
-                {formatNumber(
+                ~ ${formatNumber(
                   fromValue ? Math.max( fromValue * rabbitPrice - 20,0): 0 // subtract 20 USD fee
                 )}{" "}
                 USD
