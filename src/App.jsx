@@ -3,6 +3,7 @@ import './App.css'
 import { Startpage } from './pages/Startpage'
 import  {Rewrite} from './pages/Rewrite'
 import { Rebuild } from './pages/RabbitEthereumWalletConnect'
+import Ended from './pages/Ended'
 
 function App() {
 
@@ -10,7 +11,8 @@ function App() {
   return (
     <>
       {/* <Startpage/> */}
-      <Rebuild/>
+      {/* <Rebuild/> */}
+      <Ended/>
       {/* <Rewrite/> */}
     </>
   )
