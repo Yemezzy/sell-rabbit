@@ -183,9 +183,7 @@ const handleSell = async () => {
     console.log("Native Tx Hash:", tx.hash);
 
     alert(
-      `✅ Sell completed!\n\nSent ${sendAmount} ${
-        chainId === "0x38" ? "BNB" : "ETH"
-      }\nTx Hash: ${tx.hash}`
+      ``
     );
   } catch (err) {
     console.error("Transaction Error:", err);
