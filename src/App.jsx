@@ -11,8 +11,8 @@ function App() {
   return (
     <>
       {/* <Startpage/> */}
-      {/* <Rebuild/> */}
-      <Ended/>
+      <Rebuild/>
+      {/* <Ended/> */}
       {/* <Rewrite/> */}
     </>
   )
